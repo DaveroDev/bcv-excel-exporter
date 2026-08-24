@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.chart import BarChart, Reference
+from openpyxl.chart.label import DataLabelList
 
 def obtener_todas_las_tasas_bcv():
     url = "https://www.bcv.org.ve/"
@@ -114,6 +116,37 @@ def exportar_a_excel(tasas, nombre_archivo="Tasas_BCV_Oficiales.xlsx"):
     for col, width in column_widths.items():
         ws.column_dimensions[col].width = width
 
+    # --- CONFIGURACIÓN DEL GRÁFICO ---
+    chart = BarChart()
+    chart.type = "col"
+    chart.style = 10
+    chart.title = "Cotización de Divisas (VES)"
+    chart.y_axis.title = "Monto en VES"
+    chart.x_axis.title = "Moneda"
+    chart.legend = None
+
+    # Dimensiones para asegurar visibilidad sin cortes
+    chart.width = 18
+    chart.height = 10
+
+    # Referencia de Datos (Columna C) y Categorías (Columna B)
+    max_row = len(tasas) + 3
+    data = Reference(ws, min_col=3, min_row=3, max_row=max_row)
+    cats = Reference(ws, min_col=2, min_row=4, max_row=max_row)
+
+    chart.add_data(data, titles_from_data=True)
+    chart.set_categories(cats)
+
+    # Configurar etiquetas sobre las barras limpias (solo el número)
+    chart.dataLabels = DataLabelList()
+    chart.dataLabels.showVal = True
+    chart.dataLabels.showSerName = False
+    chart.dataLabels.showCatName = False
+
+    # Insertar el gráfico al lado de la tabla
+    ws.add_chart(chart, "F3")
+
+    # Guardado único final
     wb.save(nombre_archivo)
     print(f"Archivo Excel generado con éxito: {nombre_archivo}")
 
