@@ -12,7 +12,7 @@ def obtener_todas_las_tasas_bcv():
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
     
-    # Mapeo de IDs del HTML del BCV a nombres legibles y códigos ISO
+    # Mapeo de IDs del HTML del BCV a nombres legibles y códigos ISO.
     monedas_target = {
         "dolar": {"codigo": "USD", "nombre": "Dólar estadounidense"},
         "euro": {"codigo": "EUR", "nombre": "Euro"},
